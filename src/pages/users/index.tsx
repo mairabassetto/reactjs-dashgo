@@ -6,9 +6,11 @@ import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Pagination";
 import { Sidebar } from "../../components/Sidebar";
 import { useUsers } from "../../services/hooks/useUsers";
+import { useState } from "react";
 
 export default function UserList() {
-  const { data, isLoading, isFetching, error } = useUsers();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data, isLoading, isFetching, error } = useUsers(currentPage);
   
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -66,7 +68,7 @@ export default function UserList() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {data.map(user => {
+                  {data.users.map(user => {
                     return (
                       <Tr key={user.id}>
                         <Td paddingX={["4", "4", "6"]}>
@@ -86,9 +88,9 @@ export default function UserList() {
               </Table>
 
               <Pagination 
-                totalCountOfRegisters={200}
-                currentPage={5}
-                onPageChange={() => {}}
+                totalCountOfRegisters={data.totalCount}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
               />
             </>
           )}
